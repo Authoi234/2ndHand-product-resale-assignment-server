@@ -15,7 +15,6 @@ app.use(express.json())
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.6iupoas.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri)
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -29,8 +28,14 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const categoriesCollection = client.db('authois-product-resale').collection('categories');
-    
+    const categoriesCollection = client.db('authoisCarsResale').collection('categories');
+
+    app.get('/categories', async (req, res) => {
+      const query = { };
+      const result = await categoriesCollection.find(query).toArray();
+      res.send(result);
+    })
+
   } finally {
 
   }
@@ -38,9 +43,9 @@ async function run() {
 run().catch(err => console.log(err));
 
 app.get('/', (req, res) => {
-    res.send('Welcome to Authois 2nd hand Product relase server')
+  res.send('Welcome to Authois 2nd hand Product relase server')
 });
 
 app.listen(port, () => {
-    console.log(`Authois 2nd hand product resale server is running on port: ${port}`)
+  console.log(`Authois 2nd hand product resale server is running on port: ${port}`)
 })
