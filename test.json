@@ -1,0 +1,68 @@
+[
+    {
+        "categoryId": 1,
+        "img": "https://img.hotimg.com/2019-bugatti-chiron-0-1968188465.webp",
+        "name": "Bugatti Centodieci",
+        "location": "Ulchapara, Brahmanbaria, Bangladesh",
+        "resalePrice": 6600000        ,
+        "originalPrice": 8000000,
+        "yearsOfUse": 5,
+        "timeWhenItPosted": "Feb 29, 2024",
+        "sellersName": "Amir Ali"
+    },
+    {
+        "categoryId": 2,
+        "img": "https://i.ibb.co/tCDH6Mh/audi-q5-hub.webp",
+        "name": "Audi Q5",
+        "location": "Red Deer, Edmonton, Canada",
+        "resalePrice": 322773,
+        "originalPrice": 456567,
+        "yearsOfUse": 1,
+        "timeWhenItPosted": "Feb 29, 2024",
+        "sellersName": "Justin Joe"
+    },
+    {
+        "categoryId": 3,
+        "img": "https://i.ibb.co/BgTsjBw/A202506-web-2880.jpg",
+        "name": " Audi A3 Sedan",
+        "location": "Mehriz Industrial Town, Mehriz, Iran",
+        "resalePrice": 75400,
+        "originalPrice": 86500,
+        "yearsOfUse": 2,
+        "timeWhenItPosted": "Feb 29, 2024",
+        "sellersName": "Ibrahim Sahraei"
+    },
+    {
+        "categoryId": 1,
+        "img": "https://i.ibb.co/djm546J/2023-lamborghini-huracan-pic-581550615182643107-1024x768.jpg",
+        "name": "Lamborghini Huracan",
+        "location": "Jumeirah Beach, Dubai, United Arab Emirates",
+        "resalePrice": 345655,
+        "originalPrice": 456766,
+        "yearsOfUse": 3,
+        "timeWhenItPosted": "Feb 29, 2024",
+        "sellersName": "Sheikh Mohammed bin Rashid Al Maktoum"
+    },
+    {
+        "categoryId": 2,
+        "img": "https://i.ibb.co/h2Bj0GJ/Brand-New-Toyota-Fortuner-Navana-Limited-Exte-width-1920.png",
+        "name": "Toyota Fortuner",
+        "location": "N Taseen Road, New Cairo, Cairo, Egypt",
+        "resalePrice": 99999,
+        "originalPrice": 100000,
+        "yearsOfUse": 3,
+        "timeWhenItPosted": "Feb 29, 2024",
+        "sellersName": "Abdel Fattah El-Sisi"
+    },
+    {
+        "categoryId": 3,
+        "img": "https://i.ibb.co/F0FBvjX/2-OIBBCZZQKBTCQ2-ZG3-W2-P347-GU-cr-540.jpg",
+        "name": "BMW M3",
+        "location": "AR-365, Arkansas, United States of America",
+        "resalePrice": 1234567,
+        "originalPrice": 2345678,
+        "yearsOfUse": 1,
+        "timeWhenItPosted": "Feb 29, 2024",
+        "sellersName": "John Biden"
+    }
+]
