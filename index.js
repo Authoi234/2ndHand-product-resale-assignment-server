@@ -30,6 +30,8 @@ async function run() {
   try {
     const categoriesCollection = client.db('authoisCarsResale').collection('categories');
     const productsCollection = client.db('authoisCarsResale').collection('products');
+    const usersCollection = client.db('authoisCarsResale').collection('users');
+    const ordersCollection = client.db('authoisCarsResale').collection('orders');
 
     app.get('/categories', async (req, res) => {
       const query = { };
@@ -44,6 +46,35 @@ async function run() {
         categoryId: idNumber
       }
       const result = await productsCollection.find(filter).toArray();
+      res.send(result);
+    });
+
+    app.get('/users/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await usersCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.get('/orders/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = {
+        email: email
+      };
+      const result = await ordersCollection.find(query).toArray();
+      res.send(result);
+    } )
+
+    app.post('/user', async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
+    app.post('/orders', async (req, res) => {
+      const bookingData = req.body;
+
+      const result = await ordersCollection.insertOne(bookingData);
       res.send(result);
     })
 
