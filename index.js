@@ -51,7 +51,7 @@ async function run() {
 
     app.get('/users/:email', async (req, res) => {
       const email = req.params.email;
-      const query = { email: email };
+      const query = { email: email }; 
       const result = await usersCollection.findOne(query);
       res.send(result);
     });
@@ -76,6 +76,19 @@ async function run() {
 
       const result = await ordersCollection.insertOne(bookingData);
       res.send(result);
+    });
+
+    app.post('/addProduct', async (req, res) => {
+      const product = req.body;
+      const result = await productsCollection.insertOne(product);
+      const timestamp = result.insertedId.getTimestamp();
+      const filterId = result.insertedId.toString();
+      const filter = {
+        _id : new ObjectId(filterId)
+      }
+      const updatedResult = await productsCollection.updateOne(filter, { $set: { timestamp: timestamp } }, {upsert: true});
+      res.send(updatedResult);
+
     })
 
   } finally {
