@@ -34,24 +34,24 @@ async function run() {
     const ordersCollection = client.db('authoisCarsResale').collection('orders');
 
     app.get('/categories', async (req, res) => {
-      const query = { };
+      const query = {};
       const result = await categoriesCollection.find(query).toArray();
       res.send(result);
     });
 
-    app.get('/category/:id', async(req, res) => {
+    app.get('/category/:id', async (req, res) => {
       const id = req.params.id;
       const idNumber = parseInt(id);
       const filter = {
         categoryId: idNumber
       }
-      const result = await productsCollection.find(filter).sort({timestamp: -1}).toArray();
+      const result = await productsCollection.find(filter).sort({ timestamp: -1 }).toArray();
       res.send(result);
     });
 
     app.get('/users/:email', async (req, res) => {
       const email = req.params.email;
-      const query = { email: email }; 
+      const query = { email: email };
       const result = await usersCollection.findOne(query);
       res.send(result);
     });
@@ -63,7 +63,7 @@ async function run() {
       };
       const result = await ordersCollection.find(query).toArray();
       res.send(result);
-    } )
+    })
 
     app.post('/user', async (req, res) => {
       const user = req.body;
@@ -78,14 +78,14 @@ async function run() {
       const query = {
         _id: new ObjectId(productId)
       }
-      
+
       const updatedDoc = {
-        $set : {
+        $set: {
           status: 'sold'
         }
       }
 
-      const updated = await productsCollection.updateOne(query, updatedDoc, {upsert: true});
+      const updated = await productsCollection.updateOne(query, updatedDoc, { upsert: true });
 
       if (updated.acknowledged) {
         res.send(result)
@@ -98,9 +98,9 @@ async function run() {
       const timestamp = result.insertedId.getTimestamp();
       const filterId = result.insertedId.toString();
       const filter = {
-        _id : new ObjectId(filterId)
+        _id: new ObjectId(filterId)
       }
-      const updatedResult = await productsCollection.updateOne(filter, { $set: { timestamp: timestamp } }, {upsert: true});
+      const updatedResult = await productsCollection.updateOne(filter, { $set: { timestamp: timestamp } }, { upsert: true });
       res.send(updatedResult);
 
     })
@@ -110,11 +110,18 @@ async function run() {
       const filter = {
         email: email
       };
-      const result = await productsCollection.find(filter).sort({timestamp: -1}).toArray();
+      const result = await productsCollection.find(filter).sort({ timestamp: -1 }).toArray();
       res.send(result);
     })
 
-    
+    app.delete('/products/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {
+        _id: new ObjectId(id)
+      };
+      const result = await productsCollection.deleteOne(query);
+      res.send(result);
+    })
 
   } finally {
 
