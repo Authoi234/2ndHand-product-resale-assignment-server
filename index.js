@@ -45,7 +45,7 @@ async function run() {
       const filter = {
         categoryId: idNumber
       }
-      const result = await productsCollection.find(filter).toArray();
+      const result = await productsCollection.find(filter).sort({timestamp: -1}).toArray();
       res.send(result);
     });
 
@@ -73,9 +73,23 @@ async function run() {
 
     app.post('/orders', async (req, res) => {
       const bookingData = req.body;
-
+      const productId = bookingData.productId;
       const result = await ordersCollection.insertOne(bookingData);
-      res.send(result);
+      const query = {
+        _id: new ObjectId(productId)
+      }
+      
+      const updatedDoc = {
+        $set : {
+          status: 'sold'
+        }
+      }
+
+      const updated = await productsCollection.updateOne(query, updatedDoc, {upsert: true});
+
+      if (updated.acknowledged) {
+        res.send(result)
+      }
     });
 
     app.post('/addProduct', async (req, res) => {
@@ -90,6 +104,17 @@ async function run() {
       res.send(updatedResult);
 
     })
+
+    app.get('/myProducts/:email', async (req, res) => {
+      const email = req.params.email;
+      const filter = {
+        email: email
+      };
+      const result = await productsCollection.find(filter).sort({timestamp: -1}).toArray();
+      res.send(result);
+    })
+
+    
 
   } finally {
 
