@@ -81,7 +81,8 @@ async function run() {
 
       const updatedDoc = {
         $set: {
-          status: 'sold'
+          status: 'sold',
+          isAdvertised: false
         }
       }
 
@@ -126,16 +127,43 @@ async function run() {
     app.put('/setAdvertised/:id', async (req, res) => {
       const id = req.params.id;
       const query = {
-        _id : new ObjectId(id)
+        _id: new ObjectId(id)
       }
       const updatedDoc = {
-        $set : {
+        $set: {
           isAdvertised: true
         }
       }
-      const result = await productsCollection.updateOne(query, updatedDoc, {upsert: true});
+      const result = await productsCollection.updateOne(query, updatedDoc, { upsert: true });
       res.send(result);
+    });
+
+    app.get('/advertisedItems', async (req, res) => {
+      const query = {
+        isAdvertised: true,
+        status: "available"
+      };
+      const result = await productsCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.get('/myBuyers/:email', async (req, res) => {
+      const email = req.params.email
+      const myBuyers = await ordersCollection.find({ sellersEmail: email }).toArray();
+
+      const seenEmails = new Set();
+      const uniqueBuyers = [];
+
+      for (const buyer of myBuyers) {
+        if (!seenEmails.has(buyer.email)) {
+          seenEmails.add(buyer.email);
+          uniqueBuyers.push(buyer);
+        }
+      }
+
+      res.send(uniqueBuyers);
     })
+
 
   } finally {
 
