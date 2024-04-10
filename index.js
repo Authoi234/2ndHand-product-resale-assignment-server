@@ -147,6 +147,16 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/allBuyers', async (req, res) => {
+      const allBuyers = await  usersCollection.find({userRole: 'Buyer'})?.sort({email: 1}).toArray();
+      res.send(allBuyers);
+    });
+
+    app.get('/allSellers', async (req, res) => {
+      const allBuyers = await  usersCollection.find({userRole: 'Seller'})?.sort({email: 1}).toArray();
+      res.send(allBuyers);
+    });
+
     app.get('/myBuyers/:email', async (req, res) => {
       const email = req.params.email
       const myBuyers = await ordersCollection.find({ sellersEmail: email }).toArray();
@@ -162,7 +172,7 @@ async function run() {
       }
 
       res.send(uniqueBuyers);
-    })
+    });
 
 
   } finally {
