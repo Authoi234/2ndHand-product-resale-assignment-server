@@ -148,12 +148,12 @@ async function run() {
     });
 
     app.get('/allBuyers', async (req, res) => {
-      const allBuyers = await  usersCollection.find({userRole: 'Buyer'})?.sort({email: 1}).toArray();
+      const allBuyers = await usersCollection.find({ userRole: 'Buyer' })?.sort({ email: 1 }).toArray();
       res.send(allBuyers);
     });
 
     app.get('/allSellers', async (req, res) => {
-      const allBuyers = await  usersCollection.find({userRole: 'Seller'})?.sort({email: 1}).toArray();
+      const allBuyers = await usersCollection.find({ userRole: 'Seller' })?.sort({ email: 1 }).toArray();
       res.send(allBuyers);
     });
 
@@ -174,14 +174,26 @@ async function run() {
       res.send(uniqueBuyers);
     });
 
-    app.delete('/user/:id', async(req, res) => {
+    app.delete('/user/:id', async (req, res) => {
       const id = req.params.id;
-      const result = await usersCollection.deleteOne({_id: new ObjectId(id)});
+      const result = await usersCollection.deleteOne({ _id: new ObjectId(id) });
       res.send(result);
+    });
+
+    app.put('/verifyUser/:id', async (req, res) => {
+      const id = req.params.id;
+      const result = await usersCollection.updateOne({_id: new ObjectId(id)}, {$set: { isUserVerified: true }}, {upsert: true});
+      res.send(result);
+    });
+
+    app.get('/product/:id', async (req, res) => {
+      const id = req.params.id;
+      const result = await productsCollection.findOne({_id: new ObjectId(id)});
+      res.send(result)
     })
 
 
-  } finally { 
+  } finally {
 
   }
 }
