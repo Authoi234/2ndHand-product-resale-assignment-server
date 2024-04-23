@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
@@ -60,6 +61,15 @@ async function run() {
       const email = req.params.email;
       const query = {
         email: email
+      };
+      const result = await ordersCollection.find(query).toArray();
+      res.send(result);
+    })
+
+    app.get('/orders/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {
+        _id: new ObjectId(id)
       };
       const result = await ordersCollection.find(query).toArray();
       res.send(result);
@@ -194,22 +204,24 @@ async function run() {
 
     app.put('/reportProduct/:id', async (req, res) => {
       const id = req.params.id;
-      const result = await productsCollection.updateOne({_id: new ObjectId(id)}, {$set: {
-        isReported: true
-      }}, {upsert: true});
+      const result = await productsCollection.updateOne({ _id: new ObjectId(id) }, {
+        $set: {
+          isReported: true
+        }
+      }, { upsert: true });
       res.send(result);
     });
 
-    app.get('/reportedProducts', async (req, res) => { 
+    app.get('/reportedProducts', async (req, res) => {
       const query = { isReported: true };
       const result = await productsCollection.find(query).toArray();
       res.send(result)
     })
-    app.delete('/reportedProducts/:id', async (req, res) => { 
+    app.delete('/reportedProducts/:id', async (req, res) => {
       const id = req.params.id;
-      const result = await productsCollection.deleteOne({_id: new ObjectId(id)});
+      const result = await productsCollection.deleteOne({ _id: new ObjectId(id) });
       res.send(result)
-    })
+    });
 
 
   } finally {
