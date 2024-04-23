@@ -101,7 +101,7 @@ async function run() {
       const filter = {
         _id: new ObjectId(filterId)
       }
-      const updatedResult = await productsCollection.updateOne(filter, { $set: { timestamp: timestamp } }, { upsert: true });
+      const updatedResult = await productsCollection.updateOne(filter, { $set: { timestamp: timestamp, status: 'available' } }, { upsert: true });
       res.send(updatedResult);
 
     })
@@ -182,13 +182,32 @@ async function run() {
 
     app.put('/verifyUser/:id', async (req, res) => {
       const id = req.params.id;
-      const result = await usersCollection.updateOne({_id: new ObjectId(id)}, {$set: { isUserVerified: true }}, {upsert: true});
+      const result = await usersCollection.updateOne({ _id: new ObjectId(id) }, { $set: { isUserVerified: true } }, { upsert: true });
       res.send(result);
     });
 
     app.get('/product/:id', async (req, res) => {
       const id = req.params.id;
-      const result = await productsCollection.findOne({_id: new ObjectId(id)});
+      const result = await productsCollection.findOne({ _id: new ObjectId(id) });
+      res.send(result)
+    })
+
+    app.put('/reportProduct/:id', async (req, res) => {
+      const id = req.params.id;
+      const result = await productsCollection.updateOne({_id: new ObjectId(id)}, {$set: {
+        isReported: true
+      }}, {upsert: true});
+      res.send(result);
+    });
+
+    app.get('/reportedProducts', async (req, res) => { 
+      const query = { isReported: true };
+      const result = await productsCollection.find(query).toArray();
+      res.send(result)
+    })
+    app.delete('/reportedProducts/:id', async (req, res) => { 
+      const id = req.params.id;
+      const result = await productsCollection.deleteOne({_id: new ObjectId(id)});
       res.send(result)
     })
 
