@@ -172,7 +172,7 @@ async function run() {
           uniqueBuyers.push(buyer);
         }
       }
-
+      
       res.send(uniqueBuyers);
     });
 
