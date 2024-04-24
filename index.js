@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // Port
 const port = process.env.PORT || 5000;
@@ -74,9 +74,9 @@ async function run() {
     });
 
     app.post('/orders', async (req, res) => {
-      const bookingData = req.body;
-      const productId = bookingData.productId;
-      const result = await ordersCollection.insertOne(bookingData);
+      const data = req.body;
+      const productId = data.productId;
+      const result = await ordersCollection.insertOne(data);
       const query = {
         _id: new ObjectId(productId)
       }
@@ -216,8 +216,8 @@ async function run() {
     });
 
     app.post('/create-payment-intent', async (req, res) => {
-      const order = req.body;
-      const price = order.price;
+      const data = req.body;
+      const price = data.price;
       const amount = price * 100;
 
       const paymentIntent = await stripe.paymentIntents.create({
@@ -245,15 +245,18 @@ async function run() {
           transactionId: payment.transactionId
         }
       };
-      const updatedResult = await ordersCollection.updateOne(filter, updatedDoc, { upsert: true });
+      const updatedResult = await ordersCollection.updateOne(filter, updatedDoc, { upsert: true })
       res.send(result);
-    });
+    })
 
 
-    app.get('/orders/:id', async (req, res) => {
+    app.get('/order/:id', async (req, res) => {
       const id = req.params.id;
-      const result = await ordersCollection.findOne({_id: new ObjectId(id)}).toArray();
-      res.send(result);
+      const query = {
+        _id: new ObjectId(id)
+      }
+      const result = await ordersCollection.findOne(query);
+      res.send(result)
     })
 
   } finally {
