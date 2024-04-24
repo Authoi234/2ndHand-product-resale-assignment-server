@@ -33,6 +33,7 @@ async function run() {
     const productsCollection = client.db('authoisCarsResale').collection('products');
     const usersCollection = client.db('authoisCarsResale').collection('users');
     const ordersCollection = client.db('authoisCarsResale').collection('orders');
+    const paymentsCollection = client.db('authoisCarsResale').collection('payments');
 
     app.get('/categories', async (req, res) => {
       const query = {};
@@ -61,15 +62,6 @@ async function run() {
       const email = req.params.email;
       const query = {
         email: email
-      };
-      const result = await ordersCollection.find(query).toArray();
-      res.send(result);
-    })
-
-    app.get('/orders/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = {
-        _id: new ObjectId(id)
       };
       const result = await ordersCollection.find(query).toArray();
       res.send(result);
@@ -223,6 +215,46 @@ async function run() {
       res.send(result)
     });
 
+    app.post('/create-payment-intent', async (req, res) => {
+      const order = req.body;
+      const price = order.price;
+      const amount = price * 100;
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        currency: 'usd',
+        amount: amount,
+        "payment_method_types": [
+          "card"
+        ],
+      })
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
+    });
+
+    app.post('/payments', async (req, res) => {
+      const payment = req.body;
+      const result = await paymentsCollection.insertOne(payment);
+      const id = payment.orderId;
+      const filter = {
+        _id: new ObjectId(id)
+      };
+      const updatedDoc = {
+        $set: {
+          paid: true,
+          transactionId: payment.transactionId
+        }
+      };
+      const updatedResult = await ordersCollection.updateOne(filter, updatedDoc, { upsert: true });
+      res.send(result);
+    });
+
+
+    app.get('/orders/:id', async (req, res) => {
+      const id = req.params.id;
+      const result = await ordersCollection.findOne({_id: new ObjectId(id)}).toArray();
+      res.send(result);
+    })
 
   } finally {
 
