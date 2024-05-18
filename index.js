@@ -94,7 +94,7 @@ async function run() {
       res.send(result);
     });
 
-    app.post('/orders', verifyJWT , async (req, res) => {
+    app.post('/orders', verifyJWT, async (req, res) => {
       const data = req.body;
       const productId = data.productId;
       const result = await ordersCollection.insertOne(data);
@@ -236,7 +236,7 @@ async function run() {
       res.send(result)
     });
 
-    app.post('/create-payment-intent', verifyJWT,async (req, res) => {
+    app.post('/create-payment-intent', verifyJWT, async (req, res) => {
       const data = req.body;
       const price = data.price;
       const amount = price * 100;
@@ -253,7 +253,7 @@ async function run() {
       });
     });
 
-    app.post('/payments', verifyJWT,async (req, res) => {
+    app.post('/payments', verifyJWT, async (req, res) => {
       const payment = req.body;
       const result = await paymentsCollection.insertOne(payment);
       const id = payment.orderId;
@@ -282,7 +282,7 @@ async function run() {
 
     app.get('/jwt/:email', async (req, res) => {
       const email = req.params.email;
-      const query = {email: email};
+      const query = { email: email };
       const user = await usersCollection.findOne(query);
       if (user) {
         const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '10h' })
